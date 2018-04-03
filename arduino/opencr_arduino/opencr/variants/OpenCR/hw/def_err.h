@@ -36,5 +36,8 @@ typedef uint16_t err_code_t;
 #define ERR_NULL                            0x0103
 #define ERR_INVAILD_INDEX                   0x0104
 
+#define ERR_I2C_READ                        0x0200
+#define ERR_I2C_WRITE                       0x0201
+
 
 #endif
