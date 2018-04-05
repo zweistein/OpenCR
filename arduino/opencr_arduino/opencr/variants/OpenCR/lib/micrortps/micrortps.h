@@ -10,6 +10,7 @@
 
 #include "microcdr/microcdr.h"
 #include "micrortps/client/client.h"
+#include "micrortps/client/xrce_protocol_spec.h"
 
 #ifdef __cplusplus
  extern "C" {
