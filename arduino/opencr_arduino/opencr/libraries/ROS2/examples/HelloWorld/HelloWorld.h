@@ -22,6 +22,11 @@
 #ifndef _HelloWorld_H_
 #define _HelloWorld_H_
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <string.h>
 #include <stdlib.h>
 #include <micrortps/client/client.h>
@@ -49,15 +54,19 @@ bool serialize_HelloWorld_topic(MicroBuffer* writer, const AbstractTopic* topic_
 
 bool deserialize_HelloWorld_topic(MicroBuffer* reader, AbstractTopic* topic_structure)
 {
-    HelloWorld* topic = malloc(sizeof(HelloWorld));
+    HelloWorld* topic = (HelloWorld*) malloc(sizeof(HelloWorld));
     deserialize_uint32_t(reader, &topic->m_index);
     uint32_t size = 0;
     deserialize_uint32_t(reader, &size);
-    topic->m_message = malloc(size);
+    topic->m_message = (char*) malloc(size);
     deserialize_array_char(reader, topic->m_message, size);
 
     topic_structure->topic = topic;
     return true;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _HelloWorld_H_
