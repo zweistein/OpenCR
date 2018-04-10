@@ -42,6 +42,8 @@
 
 #include "turtlebot3_motor_driver.h"
 
+#include "pitches.h"
+
 #define CONTROL_MOTOR_SPEED_PERIOD       30   //hz
 #define IMU_PUBLISH_PERIOD               200  //hz
 #define SENSOR_STATE_PUBLISH_PERIOD      30   //hz
@@ -85,9 +87,12 @@
 #define WAIT_SECOND                     1
 #define CHECK_BUTTON_RELEASED           2
 
+#define BDPIN_BUZZER										8 				// this is a buzzer on digital pin 8 
+
 // Callback function prototypes
 void commandVelocityCallback(const geometry_msgs::Twist& cmd_vel_msg);
 void differentialDriveCallback(const diff_drive::DiffDrive& diff_drive_msg);
+void playMelodyCallback(const std_msgs::Int32& msg);
 
 // Function prototypes
 void publishImuMsg(void);

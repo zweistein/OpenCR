@@ -28,6 +28,7 @@ ros::NodeHandle nh;
 *******************************************************************************/
 ros::Subscriber<geometry_msgs::Twist> cmd_vel_sub("cmd_vel", commandVelocityCallback);
 ros::Subscriber<diff_drive::DiffDrive> cmd_diffDrive_sub("cmd_diff_drive", differentialDriveCallback);
+ros::Subscriber<std_msgs::Int32> play_melody_sub("play_melody", playMelodyCallback);
 
 
 /*******************************************************************************
@@ -115,6 +116,7 @@ void setup()
   nh.getHardware()->setBaud(115200);
   nh.subscribe(cmd_vel_sub);
   nh.subscribe(cmd_diffDrive_sub);
+  nh.subscribe(play_melody_sub);
   nh.advertise(sensor_state_pub);
   nh.advertise(imu_pub);
   nh.advertise(cmd_vel_rc100_pub);
@@ -208,6 +210,40 @@ void commandVelocityCallback(const geometry_msgs::Twist& cmd_vel_msg)
 {
   goal_linear_velocity  = cmd_vel_msg.linear.x;
   goal_angular_velocity = cmd_vel_msg.angular.z;
+}
+
+void playMelodyCallback(const std_msgs::Int32& melody_ID)
+{
+  int nrNotes = 0;
+  switch (melody_ID.data){
+  case 1:
+  {
+    int melody[] = { NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4};
+    int noteDurations[]  = { 4, 8, 8, 4, 4, 4, 4, 4 };
+    nrNotes = sizeof(melody) / sizeof(melody[0]) - 1;
+    for (int thisNote = 0; thisNote < nrNotes; thisNote++) 
+    {
+      // to calculate the note duration, take one second
+      // divided by the note type.
+      //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
+      int noteDuration = 1000 / noteDurations[thisNote];
+      tone(BDPIN_BUZZER, melody[thisNote], noteDuration);
+  
+      // to distinguish the notes, set a minimum time between them.
+      // the note's duration + 30% seems to work well:
+      int pauseBetweenNotes = noteDuration * 1.30;
+      delay(pauseBetweenNotes);
+      // stop the tone playing:
+      noTone(BDPIN_BUZZER);
+    }
+  }
+  default:
+  {
+    noTone(BDPIN_BUZZER);
+    return;
+  }
+  }  
+    
 }
 
 /*******************************************************************************
