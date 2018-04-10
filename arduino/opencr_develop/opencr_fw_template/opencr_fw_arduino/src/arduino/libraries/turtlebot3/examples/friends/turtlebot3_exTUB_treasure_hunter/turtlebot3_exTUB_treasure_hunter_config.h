@@ -33,7 +33,7 @@
 #include <nav_msgs/Odometry.h>
 
 // this message type is added by TUB 
-#include <std_msgs/DiffDrive.h>
+#include <diff_drive/DiffDrive.h>
 
 #include <turtlebot3_msgs/SensorState.h>
 
@@ -87,7 +87,7 @@
 
 // Callback function prototypes
 void commandVelocityCallback(const geometry_msgs::Twist& cmd_vel_msg);
-void differentialDriveCallback(const std_msgs::DiffDrive& diff_drive_msg);
+void differentialDriveCallback(const diff_drive::DiffDrive& diff_drive_msg);
 
 // Function prototypes
 void publishImuMsg(void);

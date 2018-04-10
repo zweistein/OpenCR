@@ -27,7 +27,7 @@ ros::NodeHandle nh;
 * Subscriber
 *******************************************************************************/
 ros::Subscriber<geometry_msgs::Twist> cmd_vel_sub("cmd_vel", commandVelocityCallback);
-ros::Subscriber<geometry_msgs::Twist> cmd_vel_sub("cmd_diff_drive", differentialDriveCallback);
+ros::Subscriber<diff_drive::DiffDrive> cmd_diffDrive_sub("cmd_diff_drive", differentialDriveCallback);
 
 
 /*******************************************************************************
@@ -114,6 +114,7 @@ void setup()
   nh.initNode();
   nh.getHardware()->setBaud(115200);
   nh.subscribe(cmd_vel_sub);
+  nh.subscribe(cmd_diffDrive_sub);
   nh.advertise(sensor_state_pub);
   nh.advertise(imu_pub);
   nh.advertise(cmd_vel_rc100_pub);
@@ -209,7 +210,10 @@ void commandVelocityCallback(const geometry_msgs::Twist& cmd_vel_msg)
   goal_angular_velocity = cmd_vel_msg.angular.z;
 }
 
-void differentialDriveCallback(const std_msgs::DiffDrive& diff_drive_msg)
+/*******************************************************************************
+* Callback function for differential drive command message
+*******************************************************************************/
+void differentialDriveCallback(const diff_drive::DiffDrive& diff_drive_msg)
 {
   bool dxl_comm_result = false;
 
@@ -217,8 +221,8 @@ void differentialDriveCallback(const std_msgs::DiffDrive& diff_drive_msg)
   double lin_vel1;
   double lin_vel2;
 
-  wheel_speed_cmd[LEFT]  = diff_drive_msg[LEFT] * RAD2TICK;
-  wheel_speed_cmd[RIGHT] = diff_drive_msg[RIGHT] * RAD2TICK;
+  wheel_speed_cmd[LEFT]  = diff_drive_msg.Left * VELOCITY_CONSTANT_VALUE;
+  wheel_speed_cmd[RIGHT] = diff_drive_msg.Right * VELOCITY_CONSTANT_VALUE;
 
   lin_vel1 = wheel_speed_cmd[LEFT]; // * VELOCITY_CONSTANT_VALUE;
   if (lin_vel1 > LIMIT_X_MAX_VELOCITY)
