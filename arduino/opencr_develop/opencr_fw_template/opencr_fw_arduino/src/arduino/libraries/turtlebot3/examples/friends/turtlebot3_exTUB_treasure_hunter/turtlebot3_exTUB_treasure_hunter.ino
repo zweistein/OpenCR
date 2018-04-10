@@ -16,7 +16,7 @@
 
 /* Authors: Yoonseok Pyo, Leon Jung, Darby Lim, HanCheol Cho */
 
-#include "turtlebot3_turtlebot3_exTUB_treasure_hunter_config.h"
+#include "turtlebot3_exTUB_treasure_hunter_config.h"
 
 /*******************************************************************************
 * ROS NodeHandle
